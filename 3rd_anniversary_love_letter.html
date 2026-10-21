@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy 3rd Anniversary, My Love! 💖</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rose: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            800: '#9f1239',
+                            900: '#881337',
+                        },
+                        burgundy: {
+                            800: '#4a0e17',
+                            900: '#31090e',
+                        },
+                        champagne: {
+                            100: '#fdfbf7',
+                            200: '#f7f0e3',
+                            300: '#e8d8b8',
+                            400: '#d4af37',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                        cursive: ['"Dancing Script"', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles & Glassmorphism */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        .glass-dark {
+            background: rgba(49, 9, 14, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        /* Perspective for flip cards */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        /* Particle background canvas pointer events */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fff1f2;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fda4af;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #fb7185;
+        }
+
+        /* Pulsing Glow Effect */
+        .glow-heart {
+            filter: drop-shadow(0 0 12px rgba(244, 63, 94, 0.6));
+        }
+
+        /* Envelope CSS Animation */
+        .envelope-flap {
+            transform-origin: top;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .envelope-open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+        
+        /* Floating animations */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+        .animate-float {
+            animation: floatSlow 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-rose-100 via-rose-50 to-champagne-200 text-slate-800 min-h-screen font-sans selection:bg-rose-300 selection:text-rose-900 overflow-x-hidden relative">
+
+    <!-- Particle Canvas for floating hearts and sparkles -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Audio Player (Optional Ambient Music toggle) -->
+    <div class="fixed top-5 right-5 z-50">
+        <button id="musicToggle" class="glass-panel hover:bg-white/80 transition-all p-3 rounded-full shadow-lg flex items-center gap-2 text-rose-800 group" title="Toggle Soft Ambient Music">
+            <i data-lucide="music" class="w-5 h-5 text-rose-600 group-hover:scale-110 transition-transform"></i>
+            <span id="musicStatus" class="text-xs font-medium pr-1 hidden sm:inline">Play Sound</span>
+        </button>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-24 relative z-20">
+
+        <!-- HERO / LANDING SECTION -->
+        <section class="min-h-[85vh] flex flex-col justify-center items-center text-center pt-8 relative">
+            
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel text-rose-700 text-sm font-semibold tracking-wide uppercase mb-6 shadow-sm border border-rose-200 animate-pulse">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                Celebrating 3 Magical Years
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+            </div>
+
+            <h1 class="font-serif text-4xl sm:text-6xl md:text-7xl font-bold text-burgundy-900 tracking-tight leading-tight mb-6">
+                Happy 3rd Anniversary, <br>
+                <span class="font-cursive text-rose-600 text-5xl sm:text-7xl md:text-8xl font-normal block mt-2 glow-heart">My Whole Heart</span>
+            </h1>
+
+            <p class="text-lg sm:text-xl text-rose-800/80 max-w-2xl font-light leading-relaxed mb-10">
+                1,095 days of laughter, adventure, and endless love. Every single moment with you is my absolute favorite story.
+            </p>
+
+            <!-- LIVE TIMER CONTAINER -->
+            <div class="w-full max-w-3xl glass-panel rounded-3xl p-6 sm:p-8 shadow-xl border border-white/60 mb-12">
+                <p class="text-xs uppercase tracking-widest text-rose-800/70 font-semibold mb-6">Time Spent Loving You</p>
+                <div class="grid grid-cols-3 sm:grid-cols-6 gap-3 sm:gap-4" id="countdown">
+                    <div class="bg-white/80 rounded-2xl p-3 shadow-sm border border-rose-100">
+                        <span id="years" class="text-2xl sm:text-3xl font-bold text-rose-600 block">3</span>
+                        <span class="text-xs text-slate-500 uppercase tracking-wider font-medium">Years</span>
+                    </div>
+                    <div class="bg-white/80 rounded-2xl p-3 shadow-sm border border-rose-100">
+                        <span id="months" class="text-2xl sm:text-3xl font-bold text-rose-600 block">0</span>
+                        <span class="text-xs text-slate-500 uppercase tracking-wider font-medium">Months</span>
+                    </div>
+                    <div class="bg-white/80 rounded-2xl p-3 shadow-sm border border-rose-100">
+                        <span id="days" class="text-2xl sm:text-3xl font-bold text-rose-600 block">0</span>
+                        <span class="text-xs text-slate-500 uppercase tracking-wider font-medium">Days</span>
+                    </div>
+                    <div class="bg-white/80 rounded-2xl p-3 shadow-sm border border-rose-100">
+                        <span id="hours" class="text-2xl sm:text-3xl font-bold text-rose-600 block">00</span>
+                        <span class="text-xs text-slate-500 uppercase tracking-wider font-medium">Hours</span>
+                    </div>
+                    <div class="bg-white/80 rounded-2xl p-3 shadow-sm border border-rose-100">
+                        <span id="minutes" class="text-2xl sm:text-3xl font-bold text-rose-600 block">00</span>
+                        <span class="text-xs text-slate-500 uppercase tracking-wider font-medium">Mins</span>
+                    </div>
+                    <div class="bg-white/80 rounded-2xl p-3 shadow-sm border border-rose-100">
+                        <span id="seconds" class="text-2xl sm:text-3xl font-bold text-rose-600 block">00</span>
+                        <span class="text-xs text-slate-500 uppercase tracking-wider font-medium">Secs</span>
+                    </div>
+                </div>
+                <p class="text-xs text-rose-700/60 mt-4 italic font-cursive text-base">...and counting towards forever ❤️</p>
+            </div>
+
+            <!-- Scroll Indicator -->
+            <a href="#story" class="animate-bounce inline-flex items-center gap-2 text-rose-700 font-medium text-sm hover:text-rose-900 transition-colors">
+                Scroll for our story <i data-lucide="chevron-down" class="w-4 h-4"></i>
+            </a>
+        </section>
+
+
+        <!-- SECTION 2: OUR STORY / TIMELINE SECTION -->
+        <section id="story" class="scroll-mt-12">
+            <div class="text-center mb-12">
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-burgundy-900">Our Timeline & Memories</h2>
+                <p class="text-rose-800/80 mt-2">Click any Polaroid to flip it and reveal the memory behind it!</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Polaroid Card 1 -->
+                <div class="memory-card perspective-1000 h-96 cursor-pointer group" onclick="flipCard(this)">
+                    <div class="card-inner relative w-full h-full duration-700 transform-style-3d transition-transform shadow-xl rounded-2xl">
+                        <!-- Front -->
+                        <div class="card-front absolute inset-0 bg-white p-4 rounded-2xl flex flex-col justify-between backface-hidden border border-rose-100">
+                            <div class="w-full h-64 bg-rose-50 rounded-lg overflow-hidden relative group-hover:scale-[1.01] transition-transform">
+                                <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&q=80&w=800" alt="First Date" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                                <span class="absolute bottom-2 left-3 text-white text-xs font-semibold bg-rose-900/60 backdrop-blur-md px-2.5 py-1 rounded-full">Year 1</span>
+                            </div>
+                            <div class="text-center pt-2">
+                                <p class="font-cursive text-2xl text-slate-800">Where It All Began ☕</p>
+                                <span class="text-xs text-rose-400 font-medium">Click to flip</span>
+                            </div>
+                        </div>
+                        <!-- Back -->
+                        <div class="card-back absolute inset-0 glass-dark text-white p-6 rounded-2xl rotate-y-180 backface-hidden flex flex-col justify-center items-center text-center border border-rose-300/30">
+                            <div class="w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center mb-4 text-rose-300">
+                                <i data-lucide="heart" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="font-serif text-xl font-bold text-rose-200 mb-2">Our First Date</h3>
+                            <p class="text-sm text-rose-100/80 leading-relaxed">
+                                I was so nervous meeting you, but the moment you smiled, everything felt right. We talked for hours until the cafe closed!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Polaroid Card 2 -->
+                <div class="memory-card perspective-1000 h-96 cursor-pointer group" onclick="flipCard(this)">
+                    <div class="card-inner relative w-full h-full duration-700 transform-style-3d transition-transform shadow-xl rounded-2xl">
+                        <!-- Front -->
+                        <div class="card-front absolute inset-0 bg-white p-4 rounded-2xl flex flex-col justify-between backface-hidden border border-rose-100">
+                            <div class="w-full h-64 bg-rose-50 rounded-lg overflow-hidden relative group-hover:scale-[1.01] transition-transform">
+                                <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&q=80&w=800" alt="First Trip" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                                <span class="absolute bottom-2 left-3 text-white text-xs font-semibold bg-rose-900/60 backdrop-blur-md px-2.5 py-1 rounded-full">Year 2</span>
+                            </div>
+                            <div class="text-center pt-2">
+                                <p class="font-cursive text-2xl text-slate-800">Adventures Together 🌅</p>
+                                <span class="text-xs text-rose-400 font-medium">Click to flip</span>
+                            </div>
+                        </div>
+                        <!-- Back -->
+                        <div class="card-back absolute inset-0 glass-dark text-white p-6 rounded-2xl rotate-y-180 backface-hidden flex flex-col justify-center items-center text-center border border-rose-300/30">
+                            <div class="w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center mb-4 text-rose-300">
+                                <i data-lucide="compass" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="font-serif text-xl font-bold text-rose-200 mb-2">Our Roadtrip Escape</h3>
+                            <p class="text-sm text-rose-100/80 leading-relaxed">
+                                Getting lost together, singing badly to classic songs at full volume, and watching the sunset from the top of the lookout point.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Polaroid Card 3 -->
+                <div class="memory-card perspective-1000 h-96 cursor-pointer group" onclick="flipCard(this)">
+                    <div class="card-inner relative w-full h-full duration-700 transform-style-3d transition-transform shadow-xl rounded-2xl">
+                        <!-- Front -->
+                        <div class="card-front absolute inset-0 bg-white p-4 rounded-2xl flex flex-col justify-between backface-hidden border border-rose-100">
+                            <div class="w-full h-64 bg-rose-50 rounded-lg overflow-hidden relative group-hover:scale-[1.01] transition-transform">
+                                <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&q=80&w=800" alt="Cozy Home" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                                <span class="absolute bottom-2 left-3 text-white text-xs font-semibold bg-rose-900/60 backdrop-blur-md px-2.5 py-1 rounded-full">Year 3</span>
+                            </div>
+                            <div class="text-center pt-2">
+                                <p class="font-cursive text-2xl text-slate-800">Building Our Life 🏡</p>
+                                <span class="text-xs text-rose-400 font-medium">Click to flip</span>
+                            </div>
+                        </div>
+                        <!-- Back -->
+                        <div class="card-back absolute inset-0 glass-dark text-white p-6 rounded-2xl rotate-y-180 backface-hidden flex flex-col justify-center items-center text-center border border-rose-300/30">
+                            <div class="w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center mb-4 text-rose-300">
+                                <i data-lucide="home" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="font-serif text-xl font-bold text-rose-200 mb-2">Everyday Paradise</h3>
+                            <p class="text-sm text-rose-100/80 leading-relaxed">
+                                Movie nights, cooking together, quiet Sunday mornings, and realizing that home isn't a place—it's wherever you are.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 3: DIGITAL JAR OF LOVE NOTES -->
+        <section class="glass-panel rounded-3xl p-8 sm:p-12 shadow-xl border border-white/70 text-center relative overflow-hidden">
+            <div class="max-w-xl mx-auto mb-8">
+                <span class="text-xs uppercase tracking-widest text-rose-600 font-semibold">Jar of Appreciation</span>
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-burgundy-900 mt-1">Little Reasons Why I Love You</h2>
+                <p class="text-rose-800/80 text-sm mt-2">Click on any folded note below to open it!</p>
+            </div>
+
+            <!-- Notes Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-3xl mx-auto" id="notesGrid">
+                <!-- JS Populates interactive note buttons here -->
+            </div>
+        </section>
+
+
+        <!-- SECTION 4: INTERACTIVE LOVE QUIZ -->
+        <section class="glass-card rounded-3xl p-6 sm:p-10 shadow-xl border border-white">
+            <div class="text-center mb-8">
+                <div class="inline-flex p-3 rounded-full bg-rose-100 text-rose-600 mb-3">
+                    <i data-lucide="gamepad-2" class="w-6 h-6"></i>
+                </div>
+                <h2 class="font-serif text-3xl font-bold text-burgundy-900">The "Us" Mini-Quiz</h2>
+                <p class="text-sm text-rose-800/80 mt-1">Test how well you remember our journey together!</p>
+            </div>
+
+            <div class="max-w-2xl mx-auto bg-white/80 rounded-2xl p-6 shadow-sm border border-rose-100" id="quizContainer">
+                <div id="quizQuestion" class="font-medium text-lg text-slate-800 mb-6 text-center">
+                    Loading Question...
+                </div>
+
+                <div id="quizOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                    <!-- Options injected dynamically -->
+                </div>
+
+                <div class="flex justify-between items-center text-xs text-slate-400 border-t pt-4">
+                    <span id="quizProgress">Question 1 of 3</span>
+                    <span id="quizScore" class="font-semibold text-rose-600">Score: 0</span>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 5: THE FINAL SURPRISE / LOVE LETTER ENVELOPE -->
+        <section class="text-center pt-6 pb-12">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-burgundy-900 mb-3">One Last Surprise...</h2>
+                <p class="text-rose-800/80 mb-8">Click the envelope to open your 3rd anniversary love letter.</p>
+
+                <!-- Interactive Envelope -->
+                <div id="envelope" class="relative w-72 sm:w-80 h-48 sm:h-52 bg-rose-300 rounded-b-2xl mx-auto shadow-2xl cursor-pointer group transition-transform hover:scale-105" onclick="openEnvelope()">
+                    <!-- Top Flap -->
+                    <div class="envelope-flap absolute top-0 left-0 right-0 h-28 bg-rose-400 rounded-t-lg shadow-md z-30 flex items-center justify-center" style="clip-path: polygon(0 0, 50% 100%, 100% 0);">
+                    </div>
+                    <!-- Envelope Wax Seal -->
+                    <div id="waxSeal" class="absolute top-20 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40 bg-rose-700 text-amber-200 w-12 h-12 rounded-full flex items-center justify-center shadow-lg border-2 border-rose-500 group-hover:scale-110 transition-transform">
+                        <i data-lucide="heart" class="w-6 h-6 fill-current"></i>
+                    </div>
+                    <!-- Letter peaking inside -->
+                    <div class="absolute inset-x-4 top-3 bottom-3 bg-cream bg-amber-50 rounded-lg shadow-inner z-10 flex flex-col justify-center items-center p-4 border border-amber-200">
+                        <p class="font-cursive text-2xl text-rose-800">To My Forever Love...</p>
+                        <p class="text-xs text-rose-600 mt-1">Tap to read</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center text-xs text-rose-800/60 pb-8">
+            Made with all my love ❤️ Happy 3 Years Anniversary!
+        </footer>
+    </div>
+
+
+    <!-- LOVE NOTE MODAL -->
+    <div id="noteModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-rose-100 transform scale-95 transition-transform duration-300 relative text-center">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2 rounded-full hover:bg-slate-100 transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="heart-handshake" class="w-6 h-6"></i>
+            </div>
+            <h3 id="modalNoteTitle" class="font-serif text-xl font-bold text-burgundy-900 mb-3">Reason #1</h3>
+            <p id="modalNoteBody" class="font-cursive text-2xl text-rose-800 leading-relaxed my-4">
+                "Your smile makes my worst days completely disappear."
+            </p>
+            <button onclick="closeModal()" class="mt-4 px-6 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-full font-medium text-sm shadow-md transition-all">
+                Close Note
+            </button>
+        </div>
+    </div>
+
+
+    <!-- LOVE LETTER MODAL FULL SCREEN -->
+    <div id="letterModal" class="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6 hidden opacity-0 transition-opacity duration-300 overflow-y-auto">
+        <div class="bg-amber-50/95 max-w-2xl w-full p-8 sm:p-12 rounded-3xl shadow-2xl border-2 border-rose-200/80 my-8 relative text-slate-800 transform scale-95 transition-transform duration-300">
+            <button onclick="closeLetter()" class="absolute top-5 right-5 text-rose-800/60 hover:text-rose-900 p-2 rounded-full hover:bg-rose-100 transition-colors">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            
+            <div class="text-center mb-8 border-b border-rose-200 pb-6">
+                <span class="font-cursive text-3xl text-rose-600">3 Years of Magic</span>
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-burgundy-900 mt-1">My Love Letter To You</h2>
+                <p class="text-xs text-rose-700/70 mt-1">October 2026</p>
+            </div>
+
+            <div class="space-y-4 font-serif text-base sm:text-lg leading-relaxed text-slate-700 text-justify sm:text-left">
+                <p>My Dearest,</p>
+                <p>
+                    Looking back over the last three years, I am constantly amazed by how lucky I am to share this life with you. Three years ago, we began a simple chapter that quickly turned into the greatest story of my life.
+                </p>
+                <p>
+                    Thank you for your warmth, your boundless kindness, and the way you hold my hand through every season. You have been my safe harbor, my biggest cheerleader, and my favorite partner in every adventure.
+                </p>
+                <p>
+                    I love the quiet mornings with you just as much as our biggest trips. I love your laughter, your gentle heart, and the effortless way you make everywhere feel like home. 
+                </p>
+                <p>
+                    Happy 3rd Anniversary, my love. Here is to all our yesterday memories, our today, and the incredible forever we are building together.
+                </p>
+                <div class="pt-6 text-right">
+                    <p class="font-cursive text-3xl text-rose-600">Forever & Always,</p>
+                    <p class="font-serif font-bold text-burgundy-900 text-lg mt-1">Your Loving Partner ❤️</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // 1. DYNAMIC ANNIVERSARY COUNTER LOGIC
+        // Set your relationship start date here (Year, Month Index 0-11, Day)
+        const startDate = new Date(2023, 9, 21, 10, 0, 0); // Oct 21, 2023
+
+        function updateCounter() {
+            const now = new Date();
+            const diff = now - startDate;
+
+            const seconds = Math.floor((diff / 1000) % 60);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            
+            // Approximate calendar days / years calculations
+            const totalDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const years = Math.floor(totalDays / 365);
+            const months = Math.floor((totalDays % 365) / 30);
+            const days = Math.floor((totalDays % 365) % 30);
+
+            document.getElementById('years').textContent = years;
+            document.getElementById('months').textContent = months;
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+        setInterval(updateCounter, 1000);
+        updateCounter();
+
+        // 2. TIMELINE FLIP CARD LOGIC
+        function flipCard(cardElement) {
+            const inner = cardElement.querySelector('.card-inner');
+            inner.classList.toggle('rotate-y-180');
+        }
+
+        // 3. DIGITAL JAR OF NOTES DATA & POPULATION
+        const loveNotes = [
+            "Your beautiful smile brighter than morning sunshine.",
+            "The way you make me laugh even on stressful days.",
+            "How caring and thoughtful you are with everyone around you.",
+            "Our endless inside jokes that nobody else understands.",
+            "How safe and comfortable I feel whenever I hold your hand.",
+            "Your incredible passion for the things you love.",
+            "The sweet way you hug me when we say goodbye.",
+            "That you are my best friend and soulmate all in one."
+        ];
+
+        const notesGrid = document.getElementById('notesGrid');
+        loveNotes.forEach((note, index) => {
+            const noteBtn = document.createElement('button');
+            noteBtn.className = "bg-white/80 hover:bg-white p-4 rounded-2xl shadow-sm border border-rose-100 text-left transition-all hover:scale-105 flex flex-col justify-between h-28 group";
+            noteBtn.onclick = () => openNoteModal(index + 1, note);
+            noteBtn.innerHTML = `
+                <div class="flex items-center justify-between text-rose-400 group-hover:text-rose-600">
+                    <i data-lucide="sticky-note" class="w-5 h-5"></i>
+                    <span class="text-xs font-semibold text-rose-300">#${index + 1}</span>
+                </div>
+                <p class="text-xs font-medium text-slate-700 line-clamp-2">Reason #${index + 1}...</p>
+                <span class="text-[10px] text-rose-500 font-semibold uppercase tracking-wider">Tap to open</span>
+            `;
+            notesGrid.appendChild(noteBtn);
+        });
+
+        function openNoteModal(number, noteText) {
+            document.getElementById('modalNoteTitle').textContent = `Reason #${number}`;
+            document.getElementById('modalNoteBody').textContent = `"${noteText}"`;
+            
+            const modal = document.getElementById('noteModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.firstElementChild.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('noteModal');
+            modal.classList.add('opacity-0');
+            modal.firstElementChild.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // 4. MINI QUIZ LOGIC
+        const quizData = [
+            {
+                question: "Where did we go on our very first memorable date?",
+                options: ["The cozy coffee shop", "The movie theater", "The seaside park", "The Italian restaurant"],
+                correct: 0
+            },
+            {
+                question: "What is my absolute favorite thing about you?",
+                options: ["Your contagious laugh", "Your kind heart", "Your adorable smile", "All of the above!"],
+                correct: 3
+            },
+            {
+                question: "How long are we going to stay together?",
+                options: ["3 More Years", "10 Years", "Forever and Ever ❤️", "Until tomorrow"],
+                correct: 2
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function loadQuiz() {
+            const q = quizData[currentQuestion];
+            document.getElementById('quizQuestion').textContent = q.question;
+            document.getElementById('quizProgress').textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
+            document.getElementById('quizScore').textContent = `Score: ${score}`;
+
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3.5 rounded-xl border border-rose-100 hover:bg-rose-50 transition-colors font-medium text-sm text-slate-700 flex items-center justify-between";
+                btn.innerHTML = `<span>${opt}</span> <i data-lucide="chevron-right" class="w-4 h-4 text-rose-300"></i>`;
+                btn.onclick = () => handleAnswer(idx);
+                optionsContainer.appendChild(btn);
+            });
+            lucide.createIcons();
+        }
+
+        function handleAnswer(selectedIdx) {
+            if (selectedIdx === quizData[currentQuestion].correct) {
+                score += 100;
+                confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
+            }
+
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuiz();
+            } else {
+                showQuizResults();
+            }
+        }
+
+        function showQuizResults() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = `
+                <div class="text-center py-6">
+                    <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="trophy" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="font-serif text-2xl font-bold text-burgundy-900 mb-2">Quiz Completed!</h3>
+                    <p class="text-rose-800 font-medium mb-4">You scored 100%! Perfect match as always ❤️</p>
+                    <button onclick="resetQuiz()" class="px-5 py-2 bg-rose-100 text-rose-700 hover:bg-rose-200 rounded-full text-xs font-semibold transition-colors">
+                        Play Again
+                    </button>
+                </div>
+            `;
+            confetti({ particleCount: 100, spread: 100, origin: { y: 0.6 } });
+            lucide.createIcons();
+        }
+
+        function resetQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            loadQuiz();
+        }
+        loadQuiz();
+
+
+        // 5. ENVELOPE / LOVE LETTER MODAL LOGIC
+        function openEnvelope() {
+            const envelope = document.getElementById('envelope');
+            envelope.classList.add('envelope-open');
+
+            confetti({
+                particleCount: 80,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+            setTimeout(() => {
+                const letterModal = document.getElementById('letterModal');
+                letterModal.classList.remove('hidden');
+                setTimeout(() => {
+                    letterModal.classList.remove('opacity-0');
+                    letterModal.firstElementChild.classList.remove('scale-95');
+                }, 10);
+            }, 600);
+        }
+
+        function closeLetter() {
+            const letterModal = document.getElementById('letterModal');
+            letterModal.classList.add('opacity-0');
+            letterModal.firstElementChild.classList.add('scale-95');
+            setTimeout(() => {
+                letterModal.classList.add('hidden');
+            }, 300);
+        }
+
+
+        // 6. BACKGROUND CANVAS FLOATING PARTICLES (HEARTS & SPARKLES)
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const particles = [];
+        const particleCount = 25;
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 20;
+                this.size = Math.random() * 12 + 8;
+                this.speedY = Math.random() * 1.2 + 0.5;
+                this.speedX = Math.sin(Math.random() * Math.PI) * 0.5;
+                this.opacity = Math.random() * 0.5 + 0.3;
+                this.rotation = Math.random() * 360;
+                this.rotSpeed = (Math.random() - 0.5) * 1;
+            }
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                this.rotation += this.rotSpeed;
+                if (this.y < -20) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = "#fb7185";
+                
+                // Draw heart shape
+                ctx.beginPath();
+                const topCurveHeight = this.size * 0.3;
+                ctx.moveTo(0, topCurveHeight);
+                ctx.bezierCurveTo(0, 0, -this.size / 2, 0, -this.size / 2, topCurveHeight);
+                ctx.bezierCurveTo(-this.size / 2, (this.size + topCurveHeight) / 2, 0, this.size, 0, this.size);
+                ctx.bezierCurveTo(0, this.size, this.size / 2, (this.size + topCurveHeight) / 2, this.size / 2, topCurveHeight);
+                ctx.bezierCurveTo(this.size / 2, 0, 0, 0, 0, topCurveHeight);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+
+        // 7. AMBIENT MUSIC AUDIO SYNTH (Web Audio API - Gentle Chill Chords)
+        let audioCtx = null;
+        let isPlaying = false;
+        let intervalId = null;
+
+        const musicBtn = document.getElementById('musicToggle');
+        const musicStatus = document.getElementById('musicStatus');
+
+        musicBtn.addEventListener('click', () => {
+            if (!isPlaying) {
+                startAmbientSound();
+                musicStatus.textContent = "Playing ♪";
+                isPlaying = true;
+            } else {
+                stopAmbientSound();
+                musicStatus.textContent = "Play Sound";
+                isPlaying = false;
+            }
+        });
+
+        function startAmbientSound() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            const notes = [261.63, 329.63, 392.00, 493.88, 523.25]; // C major 7th tones
+            
+            intervalId = setInterval(() => {
+                const note = notes[Math.floor(Math.random() * notes.length)];
+                playTone(note);
+            }, 1200);
+        }
+
+        function playTone(freq) {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+            gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 0.8);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 3.0);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 3.2);
+        }
+
+        function stopAmbientSound() {
+            if (intervalId) clearInterval(intervalId);
+        }
+    </script>
+</body>
+</html>
