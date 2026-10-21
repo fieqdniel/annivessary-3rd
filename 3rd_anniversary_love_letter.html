@@ -363,15 +363,32 @@
             </div>
         </section>
 
-        <!-- Direct Audio Player (No YouTube Required) -->
-        <div style="text-align: center; background: rgba(255, 255, 255, 0.85); padding: 15px; border-radius: 20px; margin: 20px auto; max-width: 340px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); font-family: sans-serif;">
-            <p style="margin: 0 0 10px 0; font-size: 14px; color: #f43f5e; font-weight: bold;">🎵 Our Song - Photograph</p>
-            <audio controls loop style="width: 100%;">
-                <source src="song.mp3" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio>
-        </div>
+        <!-- FLOATING MUSIC POP-UP WIDGET -->
+        <div id="musicWidget" class="fixed bottom-5 right-5 z-50 flex flex-col items-end transition-all duration-300">
+    
+            <!-- Collapsible Pop-Up Player Card -->
+            <div id="playerCard" class="hidden glass-card p-4 rounded-2xl shadow-2xl border border-white/80 mb-3 w-80 text-center transform transition-all duration-300">
+                <div class="flex justify-between items-center mb-2 pb-2 border-b border-rose-100">
+                    <span class="text-xs font-bold text-rose-600 flex items-center gap-1">
+                        <i data-lucide="music" class="w-4 h-4"></i> Our Song - Photograph
+                    </span>
+                    <button onclick="togglePlayerCard()" class="text-slate-400 hover:text-slate-600 p-1 rounded-full hover:bg-rose-50 transition-colors">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+        
+                <audio id="bgAudio" controls loop class="w-full h-10 rounded-lg">
+                    <source src="photograph.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
 
+            <!-- Floating Toggle Button -->
+            <button onclick="togglePlayerCard()" class="bg-rose-600 hover:bg-rose-700 text-white p-3.5 rounded-full shadow-xl flex items-center gap-2 transition-transform hover:scale-110 group">
+                <i data-lucide="disc" class="w-5 h-5 animate-spin-slow group-hover:rotate-180 transition-transform"></i>
+                <span class="text-xs font-semibold pr-1 hidden sm:inline">🎵 Music</span>
+            </button>
+        </div>
         <footer class="text-center text-xs text-rose-800/60 pb-8">
             Made with all my love ❤️ Happy 3 Years Anniversary!
         </footer>
